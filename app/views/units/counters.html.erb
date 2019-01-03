@@ -1,0 +1,43 @@
+<h1 style="margin:20px;">Warcraft 3 Unit Countering</h1>
+<%= form_tag("/", method: "get") do %>
+  <div style="display:flex;">
+    <div style="border-style:solid; border-width: 1px; margin: 20px; padding: 20px;width:300px;">
+      <%= label_tag(:opponent_race, "Opponent Race") %>
+      <%= select_tag(:opponent_race, options_for_select(Unit::RACES, @opponent_race), onchange: "this.form.submit();") %>
+      <%= label_tag(:race, "Your Race") %>
+      <%= select_tag(:race, options_for_select(Unit::RACES, @race), onchange: "this.form.submit();") %>
+      <%= label_tag(:tier, "Your Tier") %>
+      <%= select_tag(:tier, options_for_select(Unit::TIERS, @tier), onchange: "this.form.submit();") %>
+      <p>Opponent Units</p>
+      <% @units.each do |unit| %>
+        <li>
+          <%= check_box_tag('opponent_units[]', unit.name, @opponent_units.include?(unit.name) ? unit.name : nil, onchange: "this.form.submit();") %>
+          <%= h unit.name %>
+        </li>
+      <% end %>
+    </div>
+
+    <div style="border-style:solid; border-width: 1px; margin: 20px; padding: 20px;width:300px;">
+      <p>
+        <h2>Recommended Army</h2>
+        <p><%= @unit_counters.map { |u| u[:counters][:best].map(&:name) }.flatten.uniq.join(", ") %></p>
+        <% @unit_counters.each do |unit| %>
+          <h4><%= unit[:unit].name %> (<%= unit[:unit].attack_type %> + <%= unit[:unit].armor_type %>)</h4>
+          <ul style="padding-left:15px;">
+            <% unit[:counters][:best].each  do |u| %>
+              <li>
+                <%= u.name %> (deals <%= u.deals_damage_against(unit[:unit]) %>%, takes <%= unit[:unit].deals_damage_against(u) %>%)
+              </li>
+            <% end %>
+
+            <% unit[:counters][:good].each  do |u| %>
+              <li>
+                <%= u.name %> (deals <%= u.deals_damage_against(unit[:unit]) %>%, takes <%= unit[:unit].deals_damage_against(u) %>%)
+              </li>
+            <% end %>
+          </ul>
+        <% end %>
+      </p>
+    </div>
+  <div>
+<% end %>

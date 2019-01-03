@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @unit.name %>
+</p>
+
+<p>
+  <strong>Armor type:</strong>
+  <%= @unit.armor_type %>
+</p>
+
+<p>
+  <strong>Attack type:</strong>
+  <%= @unit.attack_type %>
+</p>
+
+<p>
+  <strong>Race:</strong>
+  <%= @unit.race %>
+</p>
+
+<p>
+  <strong>Tier:</strong>
+  <%= @unit.tier %>
+</p>
+
+<p>
+  <strong>Can attack:</strong>
+  <%= @unit.can_attack %>
+</p>
+
+<p>
+  <strong>Notes:</strong>
+  <%= @unit.notes %>
+</p>
+
+<p>
+  <strong>Immune to magic:</strong>
+  <%= @unit.immune_to_magic %>
+</p>
+
+<%= link_to 'Edit', edit_unit_path(@unit) %> |
+<%= link_to 'Back', units_path %>

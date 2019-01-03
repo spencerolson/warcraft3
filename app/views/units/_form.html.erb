@@ -1,0 +1,57 @@
+<%= form_with(model: unit, local: true) do |form| %>
+  <% if unit.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(unit.errors.count, "error") %> prohibited this unit from being saved:</h2>
+
+      <ul>
+      <% unit.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name, id: :unit_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :armor_type %>
+    <%= form.select(:armor_type, Unit::ARMOR_TYPES) %>
+  </div>
+
+  <div class="field">
+    <%= form.label :attack_type %>
+    <%= form.select(:attack_type, Unit::ATTACK_TYPES) %>
+  </div>
+
+  <div class="field">
+    <%= form.label :race %>
+    <%= form.select(:race, Unit::RACES) %>
+  </div>
+
+  <div class="field">
+    <%= form.label :tier %>
+    <%= form.select(:tier, Unit::TIERS) %>
+  </div>
+
+  <div class="field">
+    <%= form.label :can_attack %>
+    <%= form.select(:can_attack, Unit::CAN_ATTACK_OPTIONS) %>
+  </div>
+
+  <div class="field">
+    <%= form.label :notes %>
+    <%= form.text_area :notes, id: :unit_notes %>
+  </div>
+
+  <div class="field">
+    <%= form.label :immune_to_magic %>
+    <%= form.check_box :immune_to_magic, id: :unit_immune_to_magic %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

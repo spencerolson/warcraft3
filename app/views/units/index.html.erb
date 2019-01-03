@@ -1,0 +1,41 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Units</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Armor type</th>
+      <th>Attack type</th>
+      <th>Race</th>
+      <th>Tier</th>
+      <th>Can attack</th>
+      <th>Notes</th>
+      <th>Immune to magic</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @units.each do |unit| %>
+      <tr>
+        <td><%= unit.name %></td>
+        <td><%= unit.armor_type %></td>
+        <td><%= unit.attack_type %></td>
+        <td><%= unit.race %></td>
+        <td><%= unit.tier %></td>
+        <td><%= unit.can_attack %></td>
+        <td><%= unit.notes %></td>
+        <td><%= unit.immune_to_magic %></td>
+        <td><%= link_to 'Show', unit %></td>
+        <td><%= link_to 'Edit', edit_unit_path(unit) %></td>
+        <td><%= link_to 'Destroy', unit, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Unit', new_unit_path %>
