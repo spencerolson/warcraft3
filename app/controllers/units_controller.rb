@@ -64,11 +64,11 @@ class UnitsController < ApplicationController
   def counters
     @tier = params.fetch(:tier, 1)
     @opponent_units = params.fetch(:opponent_units, [])
-    @opponent_race = params.fetch(:opponent_race, "Human")
-    @units = Unit.where(race: @opponent_race)
+    @opponent_race = params.fetch(:opponent_race, "Orc")
+    @army_composition_type = params.fetch(:army_composition_type, "Total Power")
+    @units = Unit.where(race: @opponent_race).order(:tier, :name)
     @race = params.fetch(:race, "Human")
-    @unit_counters = Unit.unit_counters(Unit.where(name: @opponent_units), @race, @tier)
-    puts "unit counters are #{@unit_counters.inspect}"
+    @unit_counters = Unit.unit_counters(Unit.where(name: @opponent_units), @race, @tier, @army_composition_type)
   end
 
   private
