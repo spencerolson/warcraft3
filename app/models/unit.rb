@@ -33,6 +33,13 @@ class Unit < ApplicationRecord
     hash
   end
 
+  def effective_attack_type(unit=nil)
+    return attack_type unless name == "Gargoyle"
+    return "[Normal or Piercing]" if unit.nil?
+
+    unit.air_unit? ? "Normal" : "Piercing"
+  end
+
   def power_info(unit, army_composition_type)
     case army_composition_type
     when "Total Power"
@@ -42,7 +49,7 @@ class Unit < ApplicationRecord
       power = deals_damage_against(unit)
       "deals #{power}%"
     when "Damage Taken"
-      power = takes_damage_from(unit)
+      power = takes_damage_from(unit).to_i
       "takes #{power}%"
     end
   end
@@ -58,14 +65,20 @@ class Unit < ApplicationRecord
     end
   end
 
+  def cannot_attack?(unit)
+    (unit.immune_to_magic && effective_attack_type(unit) == "Magic") ||
+    (unit.air_unit? && can_attack == "Ground") ||
+    (!unit.air_unit && can_attack == "Air")
+  end
+
   def deals_damage_against(unit)
-    damage_dealt = if unit.immune_to_magic && attack_type == "Magic"
+    damage_dealt = if cannot_attack?(unit)
       0
     else
-      Unit.armor_to_attack[unit.armor_type.downcase][attack_type.downcase]
+      Unit.armor_to_attack[unit.armor_type.downcase][effective_attack_type(unit).downcase]
     end
 
-    if unit.name == "Footman (with Defend)" && attack_type == "Piercing"
+    if unit.name == "Footman (with Defend)" && effective_attack_type(unit) == "Piercing"
       (damage_dealt / 2.0).to_i
     else
       damage_dealt
@@ -73,13 +86,13 @@ class Unit < ApplicationRecord
   end
 
   def takes_damage_from(unit)
-    damage_taken = if immune_to_magic && unit.attack_type == "Magic"
+    damage_taken = if unit.cannot_attack?(self)
       0
     else
-      Unit.armor_to_attack[armor_type.downcase][unit.attack_type.downcase]
+      Unit.armor_to_attack[armor_type.downcase][unit.effective_attack_type(self).downcase]
     end
 
-    if name == "Footman (with Defend)" && unit.attack_type == "Piercing"
+    if name == "Footman (with Defend)" && unit.effective_attack_type(self) == "Piercing"
       damage_taken / 2.0
     else
       damage_taken
@@ -95,7 +108,12 @@ class Unit < ApplicationRecord
     b_attack_power = unit_b.deals_damage_against(self)
 
     if a_attack_power == b_attack_power
-      if unit_a.tier == unit_b.tier
+      a_damage_taken = unit_a.takes_damage_from(self)
+      b_damage_taken = unit_b.takes_damage_from(self)
+
+      if (a_damage_taken != b_damage_taken) && [a_damage_taken, b_damage_taken].include?(0)
+        a_damage_taken < b_damage_taken ? -1 : 1
+      elsif unit_a.tier == unit_b.tier
         total_power_comparison(unit_a, unit_b)
       else
         unit_a.tier > unit_b.tier ? -1 : 1
@@ -110,7 +128,12 @@ class Unit < ApplicationRecord
     b_damage_taken = unit_b.takes_damage_from(self)
 
     if a_damage_taken == b_damage_taken
-      if unit_a.tier == unit_b.tier
+      a_attack_power = unit_a.deals_damage_against(self)
+      b_attack_power = unit_b.deals_damage_against(self)
+
+      if (a_attack_power != b_attack_power) && [a_attack_power, b_attack_power].include?(0)
+        a_attack_power > b_attack_power ? -1 : 1
+      elsif unit_a.tier == unit_b.tier
         total_power_comparison(unit_a, unit_b)
       else
         unit_a.tier > unit_b.tier ? -1 : 1
@@ -140,7 +163,6 @@ class Unit < ApplicationRecord
   end
 
   def best_counter_units(race, tier, army_composition_type)
-    20.times { puts "calculating counter units..." }
     units = Unit.where(race: race).where("tier <= ?", tier).sort do |unit_a, unit_b|
       case army_composition_type
       when "Total Power"
@@ -152,18 +174,7 @@ class Unit < ApplicationRecord
       end
     end.first(3)
 
-    20.times { puts "done calculating counter units: #{units.map { |u| [u.name, u.power_against(self)] }}" }
     units
-  end
-
-  def best_counter_attack_type(i)
-    attack_types = Unit.armor_to_attack[armor_type.downcase]
-    attack_types.sort_by { |attack_type, percent| percent }.reverse[i].first.capitalize
-  end
-
-  def best_counter_armor_type(i)
-    armor_types = Unit.attack_to_armor[attack_type.downcase]
-    armor_types.sort_by { |armor_type, percent| percent }[i].first.capitalize
   end
 
   def self.armor_to_attack

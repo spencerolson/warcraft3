@@ -13,6 +13,7 @@
       <th>Can attack</th>
       <th>Notes</th>
       <th>Immune to magic</th>
+      <th>Air unit</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -28,6 +29,7 @@
         <td><%= unit.can_attack %></td>
         <td><%= unit.notes %></td>
         <td><%= unit.immune_to_magic %></td>
+        <td><%= unit.air_unit %></td>
         <td><%= link_to 'Show', unit %></td>
         <td><%= link_to 'Edit', edit_unit_path(unit) %></td>
         <td><%= link_to 'Destroy', unit, method: :delete, data: { confirm: 'Are you sure?' } %></td>

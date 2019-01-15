@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190102013238) do
+ActiveRecord::Schema.define(version: 20190115223502) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 20190102013238) do
     t.boolean "immune_to_magic"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "air_unit", default: false
     t.index ["name"], name: "index_units_on_name", unique: true
   end
 

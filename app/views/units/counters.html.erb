@@ -33,7 +33,7 @@
     </div>
 
     <div>
-      <div style="border-style:solid; border-width: 1px; margin: 20px; padding: 20px;width:300px;">
+      <div style="border-style:solid; border-width: 1px; margin: 20px; padding: 20px;width:300px; overflow-y: auto; max-height: 200px; min-height: 200px;">
         <p>
           <h2>Recommended Army</h2>
           <ul style="padding-left: 15px;">
@@ -51,16 +51,16 @@
 
       <div style="border-style:solid; border-width: 1px; margin: 20px; padding: 20px;width:300px; overflow-y: auto; max-height: 500px; min-height: 500px;">
         <p>
-          <h2>Unit Counters</h2>
+          <h2>Unit Counter List</h2>
           <% @unit_counters.each do |unit| %>
-            <h4><%= unit[:unit].name %> (<%= unit[:unit].attack_type %> + <%= unit[:unit].armor_type %>)</h4>
-            <ul style="padding-left:15px;">
+            <h4><%= unit[:unit].name %> (<%= unit[:unit].effective_attack_type %> + <%= unit[:unit].armor_type %>)</h4>
+            <ol style="padding-left:15px;">
               <% unit[:counters].each  do |u| %>
                 <li>
                   <%= u.name %> <span style=<%= @army_composition_type == "Total Power" ? "font-weight:bold;color:gold;" : "" %>><%= sprintf("%+d", u.power_against(unit[:unit])) %> PWR</span> (<span style=<%= @army_composition_type == "Damage Dealt" ? "font-weight:bold;color:gold;" : "" %>>deals <%= u.deals_damage_against(unit[:unit]) %>%</span>, <span style=<%= @army_composition_type == "Damage Taken" ? "font-weight:bold;color:gold;" : "" %>>takes <%= unit[:unit].deals_damage_against(u) %>%</span>)
                 </li>
               <% end %>
-            </ul>
+            </ol>
           <% end %>
         </p>
       </div>
