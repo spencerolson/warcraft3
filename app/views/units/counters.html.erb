@@ -2,10 +2,6 @@
 <%= form_tag("/", method: "get") do %>
   <div style="display:flex;">
     <div style="border-style:solid; border-width: 1px; margin: 20px; padding: 20px;width:300px;min-width:200px;">
-      <div style="margin: 10px 0">
-        <%= label_tag(:opponent_race, "Opponent Race") %>
-        <%= select_tag(:opponent_race, options_for_select(Unit::RACES, @opponent_race), onchange: "this.form.submit();") %>
-      </div>
 
       <div style="margin: 10px 0">
         <%= label_tag(:race, "Your Race") %>
@@ -22,11 +18,16 @@
         <%= select_tag(:army_composition_type, options_for_select(Unit::ARMY_COMPOSITION_TYPES, @army_composition_type), onchange: "this.form.submit();") %>
       </div>
 
+      <div style="margin: 10px 0">
+        <%= label_tag(:opponent_race, "Opponent Race") %>
+        <%= select_tag(:opponent_race, options_for_select(Unit::RACES, @opponent_race), onchange: "this.form.submit();") %>
+      </div>
+
       <div style="margin: 10px 0">Opponent Units</div>
       <% @units.each do |unit| %>
         <span style="display: block;">
           <%= check_box_tag('opponent_units[]', unit.name, @opponent_units.include?(unit.name) ? unit.name : nil, onchange: "this.form.submit();") %>
-          <%= h unit.name %>
+          <%= link_to unit.name, unit, target: :_blank %>
         </span>
       <% end %>
       <p>* Total Power = % damage dealt - % damage taken</p>
@@ -37,11 +38,11 @@
         <p>
           <h2>Recommended Army</h2>
           <ul style="padding-left: 15px;">
-            <% Unit.counters_display_hash(@unit_counters, @army_composition_type).each do |counter_unit_name, counter_info | %>
+            <% Unit.counters_display_hash(@unit_counters, @army_composition_type).each do |counter_unit, counter_info | %>
               <li>
-                <%= counter_unit_name %>
-                <% counter_info.each do |(info, unit_name)| %>
-                  <span style="font-weight:bold;color:gold;"><%= info %></span> <%= Unit.power_verb(@army_composition_type) %> <%= unit_name %>
+                <%= link_to counter_unit.name, counter_unit, target: :_blank %>
+                <% counter_info.each do |(info, unit)| %>
+                  <span style="font-weight:bold;color:gold;"><%= info %></span> <%= Unit.power_verb(@army_composition_type) %> <%= link_to unit.name, unit, target: :_blank %>
                 <% end %>
               </li>
             <% end %>
@@ -53,11 +54,11 @@
         <p>
           <h2>Unit Counter List</h2>
           <% @unit_counters.each do |unit| %>
-            <h4><%= unit[:unit].name %> (<%= unit[:unit].effective_attack_type %> + <%= unit[:unit].armor_type %>)</h4>
+            <h4><%= link_to unit[:unit].name, unit[:unit], target: :_blank %> (<%= unit[:unit].effective_attack_type %> + <%= unit[:unit].armor_type %>)</h4>
             <ol style="padding-left:15px;">
               <% unit[:counters].each  do |u| %>
                 <li>
-                  <%= u.name %> <span style=<%= @army_composition_type == "Total Power" ? "font-weight:bold;color:gold;" : "" %>><%= sprintf("%+d", u.power_against(unit[:unit])) %> PWR</span> (<span style=<%= @army_composition_type == "Damage Dealt" ? "font-weight:bold;color:gold;" : "" %>>deals <%= u.deals_damage_against(unit[:unit]) %>%</span>, <span style=<%= @army_composition_type == "Damage Taken" ? "font-weight:bold;color:gold;" : "" %>>takes <%= unit[:unit].deals_damage_against(u) %>%</span>)
+                  <%= link_to u.name, u, target: :_blank %> <span style=<%= @army_composition_type == "Total Power" ? "font-weight:bold;color:gold;" : "" %>><%= sprintf("%+d", u.power_against(unit[:unit])) %> PWR</span> (<span style=<%= @army_composition_type == "Damage Dealt" ? "font-weight:bold;color:gold;" : "" %>>deals <%= u.deals_damage_against(unit[:unit]) %>%</span>, <span style=<%= @army_composition_type == "Damage Taken" ? "font-weight:bold;color:gold;" : "" %>>takes <%= unit[:unit].deals_damage_against(u) %>%</span>)
                 </li>
               <% end %>
             </ol>

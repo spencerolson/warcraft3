@@ -26,8 +26,8 @@ class Unit < ApplicationRecord
     counters.each do |counter|
       unit = counter[:unit]
       counter_unit = counter[:counters].first
-      hash[counter_unit.name] ||= []
-      hash[counter_unit.name] << [counter_unit.power_info(unit, army_composition_type), unit.name]
+      hash[counter_unit] ||= []
+      hash[counter_unit] << [counter_unit.power_info(unit, army_composition_type), unit]
     end
 
     hash
