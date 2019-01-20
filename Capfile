@@ -13,6 +13,8 @@ require "capistrano/scm/git"
 install_plugin Capistrano::SCM::Git
 install_plugin Capistrano::Puma
 
+set :chruby_ruby, 'ruby-2.6.0'
+
 # Include tasks from other gems included in your Gemfile
 #
 # For documentation on these, see for example:
