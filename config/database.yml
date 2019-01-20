@@ -81,5 +81,5 @@ test:
 production:
   <<: *default
   database: warcraft3_production
-  username: warcraft3
+  username: solson
   password: <%= ENV['WARCRAFT3_DATABASE_PASSWORD'] %>
