@@ -8,7 +8,7 @@
     <%= javascript_include_tag 'application' %>
   </head>
 
-  <body style="background-image: url(/assets/images/background.png); background-repeat: no-repeat; background-size: inherit; background-color: black; color: #edecec; font-size: 16px;">
+  <body style="background-image: url(<%= asset_path('background.png', digest: false) %>); background-repeat: no-repeat; background-size: inherit; background-color: black; color: #edecec; font-size: 16px;">
     <%= yield %>
   </body>
 </html>
