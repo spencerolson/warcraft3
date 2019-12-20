@@ -1,7 +1,7 @@
-<h1 style="margin:20px;">Warcraft III Unit Countering</h1>
+<h1 style="margin:20px;">Warcraft III Attack vs. Armor Types</h1>
 <%= form_tag("/", method: "get") do %>
   <div style="display:flex;">
-    <div style="border-style:solid; border-width: 1px; margin: 20px; padding: 20px;width:300px;min-width:200px;">
+    <div style="border-style:solid; border-width: 1px; margin: 20px; padding: 20px;width:375px;min-width:200px;">
 
       <div style="margin: 10px 0">
         <%= label_tag(:race, "Your Race") %>
@@ -34,9 +34,9 @@
     </div>
 
     <div>
-      <div style="border-style:solid; border-width: 1px; margin: 20px; padding: 20px;width:300px; overflow-y: auto; max-height: 200px; min-height: 200px;">
+      <div style="border-style:solid; border-width: 1px; margin: 20px; padding: 20px;width:375px; overflow-y: auto; max-height: 200px; min-height: 200px;">
         <p>
-          <h2>Suggested Counters</h2>
+          <h2>Attack/Armor Counters</h2>
           <ul style="padding-left: 15px;">
             <% Unit.counters_display_hash(@unit_counters, @army_composition_type).each do |counter_unit, counter_info | %>
               <li>
@@ -50,9 +50,9 @@
         </p>
       </div>
 
-      <div style="border-style:solid; border-width: 1px; margin: 20px; padding: 20px;width:300px; overflow-y: auto; max-height: 500px; min-height: 500px;">
+      <div style="border-style:solid; border-width: 1px; margin: 20px; padding: 20px;width:375px; overflow-y: auto; max-height: 500px; min-height: 500px;">
         <p>
-          <h2>Unit Counter List</h2>
+          <h2>Attack/Armor Counter List</h2>
           <% @unit_counters.each do |unit| %>
             <h4><%= link_to unit[:unit].name, unit[:unit], target: :_blank %> (<%= unit[:unit].effective_attack_type %> + <%= unit[:unit].armor_type %>)</h4>
             <ol style="padding-left:15px;">
