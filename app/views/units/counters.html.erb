@@ -42,8 +42,18 @@
             <% Unit.counters_display_hash(@unit_counters, @army_composition_type).each do |counter_unit, counter_info | %>
               <li>
                 <%= link_to counter_unit.name, counter_unit, target: :_blank %>
-                <% counter_info.each do |(info, unit)| %>
-                  <span style="font-weight:bold;color:gold;"><%= info %></span> <%= Unit.power_verb(@army_composition_type) %> <%= link_to unit.name, unit, target: :_blank %>
+                <% if counter_info.length <= 1 %>
+                  <% counter_info.each do |(info, unit)| %>
+                    <span style="font-weight:bold;color:gold;"><%= info %></span> <%= Unit.power_verb(@army_composition_type) %> <%= link_to unit.name, unit, target: :_blank %>
+                  <% end %>
+                <% else %>
+                  <ul>
+                  <% counter_info.each do |(info, unit)| %>
+                    <li>
+                      <span style="font-weight:bold;color:gold;"><%= info %></span> <%= Unit.power_verb(@army_composition_type) %> <%= link_to unit.name, unit, target: :_blank %>
+                    </li>
+                  <% end %>
+                  </ul>
                 <% end %>
               </li>
             <% end %>
